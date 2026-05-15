@@ -25,6 +25,7 @@ model User {
   userRole        UserRole          @relation(fields: [userRoleId], references: [id])
   userRoleId      Int
   authSessionLogs AuthSessionLog[]
+  revokedJwts     RevokedJwt[]
 }
 
 model AuthSessionLog {
@@ -38,4 +39,15 @@ model AuthSessionLog {
 
   @@index([userId, createdAt])
   @@index([action, createdAt])
+}
+
+model RevokedJwt {
+  jti       String   @id
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  revokedAt DateTime @default(now())
+  expiresAt DateTime?
+
+  @@index([userId, revokedAt])
+  @@index([expiresAt])
 }

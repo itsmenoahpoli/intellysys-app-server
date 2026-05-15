@@ -22,6 +22,7 @@ export const AuthRouter = (authController: AuthController) => {
         body: TSignIn,
       },
     )
+    .post("/logout", ({ set, jwt, request }) => authController.logout(set, jwt, { request }))
     .post(
       "/request-password-reset",
       ({ body, set }) => authController.requestPasswordReset(body, set),

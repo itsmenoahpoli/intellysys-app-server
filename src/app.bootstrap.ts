@@ -1,7 +1,13 @@
 import { Elysia } from "elysia";
-import { securityPlugin, swaggerPlugin, staticAssetsPlugin } from "./plugins";
+import { securityPlugin, swaggerPlugin, staticAssetsPlugin, authGuardPlugin } from "./plugins";
 import { HttpStatus } from "./utils";
-import { AuthModule, AuthSessionLogsModule, UserRolesModule, UsersModule } from "./modules";
+import {
+  AccountModule,
+  AuthModule,
+  AuthSessionLogsModule,
+  UserRolesModule,
+  UsersModule,
+} from "./modules";
 
 export const app = new Elysia();
 
@@ -20,7 +26,12 @@ app.group("/api/v1", (app) => {
       };
     })
     .use(AuthModule())
-    .use(UsersModule())
-    .use(UserRolesModule())
-    .use(AuthSessionLogsModule());
+    .group("", (app) => {
+      return app
+        .use(authGuardPlugin)
+        .use(AccountModule())
+        .use(UsersModule())
+        .use(UserRolesModule())
+        .use(AuthSessionLogsModule());
+    });
 });
