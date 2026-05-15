@@ -1,5 +1,7 @@
 import { prisma } from "@/database";
+import { clampInt, logger, normalizeSort } from "@/utils";
 import { DBService } from "../db.service";
+import type { EmailNotificationsService } from "../email-notifications/email-notifications.service";
 import type { Prisma, User, UserRole } from "@prisma/client";
 import type { CreateUserDto, UpdateUserDto, UsersQueryDto } from "./users.dto";
 
@@ -21,23 +23,7 @@ type UsersListResult = {
   };
 };
 
-const clampInt = (raw: unknown, fallback: number, min: number, max: number) => {
-  const n = typeof raw === "string" ? Number(raw) : Number(raw);
-  if (!Number.isFinite(n)) return fallback;
-  return Math.min(max, Math.max(min, Math.trunc(n)));
-};
-
-const normalizeSort = (
-  sortByRaw: string | undefined,
-  sortOrderRaw: string | undefined,
-): { sortBy: "name" | "email" | "createdAt" | "updatedAt"; sortOrder: "asc" | "desc" } => {
-  const sortBy =
-    sortByRaw === "email" || sortByRaw === "createdAt" || sortByRaw === "updatedAt"
-      ? sortByRaw
-      : "name";
-  const sortOrder = sortOrderRaw?.toLowerCase() === "asc" ? "asc" : "desc";
-  return { sortBy, sortOrder };
-};
+const ALLOWED_SORT_FIELDS = ["name", "email", "createdAt", "updatedAt"] as const;
 
 const usernameFromEmail = (email: string) => email.split("@")[0] || email;
 
@@ -51,7 +37,7 @@ const departmentFromRoleName = (roleName: string) => {
 };
 
 export class UsersService extends DBService<typeof prisma.user> {
-  constructor() {
+  constructor(private readonly emailNotifications?: EmailNotificationsService) {
     super(prisma.user);
   }
 
@@ -102,7 +88,12 @@ export class UsersService extends DBService<typeof prisma.user> {
     const skip = (page - 1) * limit;
 
     const where = this.buildWhere(query);
-    const { sortBy, sortOrder } = normalizeSort(query.sortBy, query.sortOrder);
+    const { sortBy, sortOrder } = normalizeSort(
+      query.sortBy,
+      query.sortOrder,
+      ALLOWED_SORT_FIELDS,
+      "name",
+    );
 
     const [total, users] = await prisma.$transaction([
       prisma.user.count({ where }),
@@ -200,6 +191,20 @@ export class UsersService extends DBService<typeof prisma.user> {
       },
       include: { userRole: true },
     });
+
+    void this.emailNotifications
+      ?.sendUserAccountCreatedEmail({
+        to: created.email,
+        name: created.name,
+        roleName: created.userRole.name,
+        temporaryPassword: body.password,
+      })
+      .catch((err) => {
+        logger.error(
+          { err, userId: created.id, email: created.email },
+          "[Users] Failed to send account-created email",
+        );
+      });
 
     return this.toPublicUser(created);
   }

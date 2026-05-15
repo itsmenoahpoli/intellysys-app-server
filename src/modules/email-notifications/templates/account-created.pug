@@ -1,0 +1,105 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    meta(name="x-apple-disable-message-reformatting")
+    title= subject
+    style.
+      @media (prefers-color-scheme: dark) {
+        .bg { background: #0b1220 !important; }
+        .card { background: #0f1a30 !important; border-color: #1f2a44 !important; }
+        .text { color: #e6e9f2 !important; }
+        .muted { color: #a8b0c3 !important; }
+        .divider { border-color: #1f2a44 !important; }
+        .code { background: #0b1220 !important; border-color: #1f2a44 !important; color: #e6e9f2 !important; }
+      }
+      @media screen and (max-width: 600px) {
+        .container { width: 100% !important; }
+        .px { padding-left: 18px !important; padding-right: 18px !important; }
+      }
+
+  body(style="margin:0; padding:0; background:#f3f5f8;")
+    //- Preheader (hidden)
+    div(style="display:none; max-height:0; overflow:hidden; opacity:0; color:transparent;")
+      = preheader
+
+    table.bg(role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:#f3f5f8;")
+      tr
+        td(align="center" style="padding:28px 12px;")
+          table.container(role="presentation" cellpadding="0" cellspacing="0" width="600" style="width:600px; max-width:600px;")
+            tr
+              td(align="left" style="padding:0 6px 14px 6px;")
+                div(style="font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; font-size:14px; letter-spacing:0.4px; color:#6b7280;")
+                  span(style="display:inline-block; padding:6px 10px; background:#eef2ff; color:#3730a3; border-radius:999px; font-weight:600;")
+                    = appName
+
+            tr
+              td.card(style="background:#ffffff; border:1px solid #e5e7eb; border-radius:16px; overflow:hidden;")
+                table(role="presentation" cellpadding="0" cellspacing="0" width="100%")
+                  tr
+                    td(style="height:6px; background:linear-gradient(90deg,#4f46e5,#06b6d4);")
+                  tr
+                    td.px(style="padding:26px 28px 10px 28px;")
+                      div.text(style="font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:#111827;")
+                        div(style="font-size:20px; font-weight:800; margin:0 0 6px 0;")
+                          | Welcome, #{recipientName}
+                        div.muted(style="font-size:14px; line-height:20px; color:#6b7280;")
+                          | Your account for 
+                          strong(style="color:#111827;")= appName
+                          |  has been created.
+
+                  tr
+                    td.px(style="padding:10px 28px 0 28px;")
+                      table(role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:separate;")
+                        tr
+                          td(style="padding:12px 14px; background:#f9fafb; border:1px solid #eef2f7; border-radius:12px;")
+                            div.text(style="font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:#111827; font-size:13px; line-height:18px;")
+                              div(style="font-weight:700; margin-bottom:6px;") Account details
+                              div(style="display:block; margin:0 0 4px 0;")
+                                span.muted(style="color:#6b7280;") Email:
+                                |  
+                                strong= recipientEmail
+                              if roleName
+                                div(style="display:block; margin:0;")
+                                  span.muted(style="color:#6b7280;") Role:
+                                  |  
+                                  strong= roleName
+
+                  if dashboardUrl
+                    tr
+                      td.px(style="padding:18px 28px 0 28px;")
+                        table(role="presentation" cellpadding="0" cellspacing="0")
+                          tr
+                            td(align="center" style="background:#4f46e5; border-radius:12px;")
+                              a(href=dashboardUrl style="display:inline-block; padding:12px 18px; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; font-size:14px; font-weight:700; color:#ffffff; text-decoration:none;")
+                                | Sign in to #{appName}
+                        div.muted(style="font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; font-size:12px; color:#6b7280; margin-top:10px;")
+                          | If the button doesn’t work, copy and paste this URL: 
+                          span(style="color:#111827;")= dashboardUrl
+
+                  if temporaryPassword
+                    tr
+                      td.px(style="padding:16px 28px 0 28px;")
+                        div.text(style="font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:#111827; font-size:13px; line-height:18px;")
+                          div(style="font-weight:700; margin-bottom:8px;") Temporary password
+                          div.code(style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; background:#f8fafc; border:1px solid #e5e7eb; border-radius:12px; padding:12px 14px; font-size:13px; color:#0f172a;")
+                            = temporaryPassword
+                          div.muted(style="margin-top:8px; color:#6b7280; font-size:12px;")
+                            | For security, please change your password after your first sign-in.
+
+                  tr
+                    td.px(style="padding:18px 28px 22px 28px;")
+                      hr.divider(style="border:none; border-top:1px solid #e5e7eb; margin:0 0 14px 0;")
+                      div.muted(style="font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; font-size:12px; line-height:18px; color:#6b7280;")
+                        | If you weren’t expecting this email, you can safely ignore it.
+                        if supportEmail
+                          |  Need help? Contact 
+                          a(href=`mailto:${supportEmail}` style="color:#4f46e5; text-decoration:none; font-weight:700;")= supportEmail
+                          | .
+
+            tr
+              td(align="center" style="padding:14px 6px 0 6px;")
+                div(style="font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; font-size:11px; line-height:16px; color:#9ca3af;")
+                  | © #{year} #{appName}. All rights reserved.
+

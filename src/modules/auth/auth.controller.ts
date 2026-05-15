@@ -1,5 +1,6 @@
 import { HttpStatus } from "@/utils";
 import { BaseController, SetContext } from "../base.controller";
+import { AuthSessionLogsService } from "../auth-session-logs/auth-session-logs.service";
 import { AuthService } from "./auth.service";
 import { SignInDto } from "./auth.dto";
 
@@ -14,8 +15,15 @@ type JwtContext = {
   }) => Promise<string>;
 };
 
+type RequestContext = {
+  request: Request;
+};
+
 export class AuthController extends BaseController {
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private authSessionLogs: AuthSessionLogsService,
+  ) {
     super();
   }
 
@@ -23,6 +31,7 @@ export class AuthController extends BaseController {
     body: SignInDto,
     set: SetContext,
     jwt: JwtContext,
+    requestCtx: RequestContext,
   ) => {
     const user = await this.authService.verifyCredentials(
       body.email,
@@ -35,6 +44,24 @@ export class AuthController extends BaseController {
         success: false,
         message: "Invalid email or password",
       };
+    }
+
+    try {
+      const headers = requestCtx.request.headers;
+      const ipAddress =
+        headers.get("x-forwarded-for") ||
+        headers.get("x-real-ip") ||
+        "unknown";
+      const userAgent = headers.get("user-agent") || "unknown";
+
+      await this.authSessionLogs.createLog({
+        userId: user.id,
+        action: "login",
+        ipAddress,
+        userAgent,
+      });
+    } catch {
+      // silently fail - don't block login if logging fails
     }
 
     const token = await jwt.sign({

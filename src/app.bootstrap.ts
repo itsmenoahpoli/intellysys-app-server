@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 import { securityPlugin, swaggerPlugin, staticAssetsPlugin } from "./plugins";
 import { HttpStatus } from "./utils";
-import { AuthModule, UserRolesModule, UsersModule } from "./modules";
+import { AuthModule, AuthSessionLogsModule, UserRolesModule, UsersModule } from "./modules";
 
 export const app = new Elysia();
 
@@ -21,5 +21,6 @@ app.group("/api/v1", (app) => {
     })
     .use(AuthModule())
     .use(UsersModule())
-    .use(UserRolesModule());
+    .use(UserRolesModule())
+    .use(AuthSessionLogsModule());
 });

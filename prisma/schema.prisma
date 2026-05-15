@@ -16,12 +16,26 @@ model UserRole {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique
-  passwordHash String
-  name         String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  userRole     UserRole @relation(fields: [userRoleId], references: [id])
-  userRoleId   Int
+  id              Int               @id @default(autoincrement())
+  email           String            @unique
+  passwordHash    String
+  name            String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  userRole        UserRole          @relation(fields: [userRoleId], references: [id])
+  userRoleId      Int
+  authSessionLogs AuthSessionLog[]
+}
+
+model AuthSessionLog {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  action    String // "login" or "logout"
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
 }

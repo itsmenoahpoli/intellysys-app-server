@@ -8,14 +8,16 @@ export const AuthRouter = (authController: AuthController) => {
     .use(jwtPlugin)
     .post(
       "/login",
-      ({ body, set, jwt }) => authController.signIn(body, set, jwt),
+      ({ body, set, jwt, request }) =>
+        authController.signIn(body, set, jwt, { request }),
       {
         body: TSignIn,
       },
     )
     .post(
       "/sign-in",
-      ({ body, set, jwt }) => authController.signIn(body, set, jwt),
+      ({ body, set, jwt, request }) =>
+        authController.signIn(body, set, jwt, { request }),
       {
         body: TSignIn,
       },
