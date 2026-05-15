@@ -1,11 +1,11 @@
-## Seeded user roles
+## User roles
 
 - Super Admin
 - IT Admin
 - Manager
 - Employee
 
-## Seeded test accounts
+## Test accounts
 
 All accounts use the same password by default (unless overridden by env vars for Super Admin).
 
