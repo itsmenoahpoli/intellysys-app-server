@@ -2,8 +2,8 @@ import { logger } from "@/utils";
 import type { EnvKey, EnvKeysObj } from "@/types/env";
 
 const envKeys: EnvKeysObj = {
-  NODE_ENV: process.env.NODE_ENV,
-  APP_PORT: Number(process.env.APP_PORT || 5060),
+  NODE_ENV: process.env.NODE_ENV ?? "production",
+  APP_PORT: Number(process.env.APP_PORT ?? process.env.PORT ?? 5060),
   APP_JWT_SECRET: process.env.APP_JWT_SECRET,
 } as const;
 
@@ -12,7 +12,7 @@ const getEnvValue = <T>(key: EnvKey) => {
 };
 
 const validateRequiredEnv = () => {
-  const requiredEnvs: string[] = ["NODE_ENV", "APP_PORT", "APP_JWT_SECRET"];
+  const requiredEnvs: string[] = ["APP_JWT_SECRET"];
 
   requiredEnvs.forEach((key) => {
     if (!process.env[key]) {

@@ -66,7 +66,7 @@ APP_JWT_SECRET=your-long-random-secret-at-least-32-chars
 DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/DATABASE_NAME?schema=public"
 ```
 
-- **`NODE_ENV`**, **`APP_PORT`**, and **`APP_JWT_SECRET`** are required at startup; missing values cause the process to exit during validation.  
+- **`APP_JWT_SECRET`** is required at startup; missing values cause the process to exit during validation.  
 - **`DATABASE_URL`** is required by Prisma for migrations and runtime database access (format matches [Prisma’s PostgreSQL URL](https://www.prisma.io/docs/orm/reference/connection-urls#postgresql)).  
 
 Adjust host, port, credentials, and database name to match your PostgreSQL instance (including one created with DBngin).

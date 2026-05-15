@@ -4,6 +4,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/main.ts",
+    "start": "bun run src/main.ts",
+    "postinstall": "bunx prisma generate",
     "db:seed": "bunx prisma db seed"
   },
   "dependencies": {
@@ -26,5 +28,5 @@
   "prisma": {
     "seed": "bun prisma/seed.ts"
   },
-  "module": "src/index.js"
+  "main": "src/main.ts"
 }
