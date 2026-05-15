@@ -1,17 +1,17 @@
 export type PrismaModelDelegate = {
-  findMany: (args?: unknown) => Promise<unknown>;
-  findFirst: (args?: unknown) => Promise<unknown>;
-  findUnique: (args?: unknown) => Promise<unknown>;
-  findUniqueOrThrow: (args?: unknown) => Promise<unknown>;
-  findFirstOrThrow: (args?: unknown) => Promise<unknown>;
-  create: (args?: unknown) => Promise<unknown>;
-  createMany: (args?: unknown) => Promise<unknown>;
-  update: (args?: unknown) => Promise<unknown>;
-  updateMany: (args?: unknown) => Promise<unknown>;
-  upsert: (args?: unknown) => Promise<unknown>;
-  delete: (args?: unknown) => Promise<unknown>;
-  deleteMany: (args?: unknown) => Promise<unknown>;
-  count: (args?: unknown) => Promise<number>;
+  findMany: (args?: any) => any;
+  findFirst: (args?: any) => any;
+  findUnique: (args?: any) => any;
+  findUniqueOrThrow: (args?: any) => any;
+  findFirstOrThrow: (args?: any) => any;
+  create: (args?: any) => any;
+  createMany: (args?: any) => any;
+  update: (args?: any) => any;
+  updateMany: (args?: any) => any;
+  upsert: (args?: any) => any;
+  delete: (args?: any) => any;
+  deleteMany: (args?: any) => any;
+  count: (args?: any) => any;
 };
 
 export class DBService<T extends PrismaModelDelegate = PrismaModelDelegate> {

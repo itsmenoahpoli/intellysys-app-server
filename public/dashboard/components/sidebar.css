@@ -1,0 +1,251 @@
+.dash-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #0f1419;
+  color: #e7ecf3;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
+
+.dash-shell__sidebar {
+  flex-shrink: 0;
+  width: 268px;
+}
+
+.dash-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 14px 16px;
+  background: #080c11;
+  border-right: 1px solid #1a2332;
+  box-sizing: border-box;
+}
+
+.dash-sidebar__brand {
+  padding: 0 10px 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.dash-sidebar__nav {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0 -6px;
+  padding: 0 6px 16px;
+}
+
+.dash-sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dash-sidebar__item {
+  margin-bottom: 4px;
+}
+
+.dash-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.dash-sidebar__link:hover {
+  color: #e2e8f0;
+  background: rgba(148, 163, 184, 0.08);
+}
+
+.dash-sidebar__link.is-active {
+  background: #1a3a5c;
+  color: #f8fafc;
+}
+
+.dash-sidebar__link.is-active .dash-sidebar__icon {
+  color: #cbd5e1;
+}
+
+.dash-sidebar__icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: currentColor;
+  opacity: 0.92;
+}
+
+.dash-sidebar__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.dash-sidebar__label {
+  flex: 1;
+  min-width: 0;
+}
+
+.dash-sidebar__profile {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  margin-top: auto;
+  background: #121820;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  transition: background 0.15s ease;
+}
+
+.dash-sidebar__profile:hover {
+  background: #161e29;
+}
+
+.dash-sidebar__avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.dash-sidebar__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #334155, #1e293b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+}
+
+.dash-sidebar__avatar svg {
+  width: 22px;
+  height: 22px;
+}
+
+.dash-sidebar__status {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid #121820;
+  box-sizing: border-box;
+}
+
+.dash-sidebar__profile-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dash-sidebar__profile-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dash-sidebar__profile-role {
+  font-size: 0.75rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dash-sidebar__chevron {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: #64748b;
+}
+
+.dash-sidebar__chevron svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.dash-shell__content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0f1419;
+}
+
+.dash-topbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 28px;
+  border-bottom: 1px solid #1e293b;
+  background: rgba(15, 20, 25, 0.92);
+  backdrop-filter: blur(10px);
+}
+
+.dash-topbar h1 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.dash-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dash-topbar a,
+.dash-topbar button.link {
+  color: #8b9cb3;
+  text-decoration: none;
+  font-size: 0.875rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+
+.dash-topbar a:hover,
+.dash-topbar button.link:hover {
+  color: #e7ecf3;
+}
+
+.dash-main {
+  flex: 1;
+  padding: 32px 28px 48px;
+  max-width: 960px;
+}

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign in · Dashboard</title>
+    <style>
+      :root {
+        --bg: #0f1419;
+        --surface: #1a2332;
+        --border: #2d3a4f;
+        --text: #e7ecf3;
+        --muted: #8b9cb3;
+        --accent: #3b82f6;
+        --accent-hover: #2563eb;
+        --danger: #f87171;
+        --radius: 12px;
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(
+            ellipse 120% 80% at 50% -20%,
+            #1e3a5f 0%,
+            transparent 55%
+          ),
+          var(--bg);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .card {
+        width: 100%;
+        max-width: 400px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 32px;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.35rem;
+        font-weight: 600;
+      }
+      .subtitle {
+        margin: 0 0 28px;
+        font-size: 0.9rem;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+      label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      input {
+        width: 100%;
+        padding: 12px 14px;
+        margin-bottom: 18px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #121a26;
+        color: var(--text);
+        font-size: 1rem;
+      }
+      input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+      }
+      button {
+        width: 100%;
+        padding: 12px 16px;
+        margin-top: 8px;
+        border: none;
+        border-radius: 8px;
+        background: var(--accent);
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:hover {
+        background: var(--accent-hover);
+      }
+      button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .error {
+        margin-bottom: 16px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: rgba(248, 113, 113, 0.12);
+        border: 1px solid rgba(248, 113, 113, 0.35);
+        color: var(--danger);
+        font-size: 0.9rem;
+        display: none;
+      }
+      .error.visible {
+        display: block;
+      }
+      .hint {
+        margin-top: 20px;
+        font-size: 0.8rem;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Dashboard</h1>
+      <p class="subtitle">
+        Sign in to continue. After a successful login you will be sent to your
+        intended page, or to the dashboard home.
+      </p>
+      <div id="error" class="error" role="alert"></div>
+      <form id="form" novalidate>
+        <label for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="username"
+          required
+        />
+        <label for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          required
+          minlength="6"
+        />
+        <button type="submit" id="submit">Sign in</button>
+      </form>
+      <p class="hint">
+        Optional query:
+        <code>?next=/public/dashboard/home.html</code>
+        — sets where to land after login (same-origin paths under
+        <code>/public/dashboard/</code> only).
+      </p>
+    </div>
+    <script>
+      (function () {
+        var STORAGE_TOKEN = "intellysys_auth_token";
+        var STORAGE_USER = "intellysys_auth_user";
+        var DEFAULT_LANDING = "/public/dashboard/home.html";
+
+        function safeNext(raw) {
+          try {
+            if (!raw || typeof raw !== "string") return DEFAULT_LANDING;
+            var u = new URL(raw, window.location.origin);
+            if (u.origin !== window.location.origin) return DEFAULT_LANDING;
+            var path = u.pathname;
+            if (!path.startsWith("/public/dashboard/")) return DEFAULT_LANDING;
+            return path + u.search + u.hash;
+          } catch (_) {
+            return DEFAULT_LANDING;
+          }
+        }
+
+        var params = new URLSearchParams(window.location.search);
+        var destination = safeNext(params.get("next"));
+
+        var form = document.getElementById("form");
+        var submit = document.getElementById("submit");
+        var errorEl = document.getElementById("error");
+
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          errorEl.textContent = "";
+          errorEl.classList.remove("visible");
+          submit.disabled = true;
+
+          var email = document.getElementById("email").value.trim();
+          var password = document.getElementById("password").value;
+
+          try {
+            var res = await fetch("/api/v1/auth/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email: email, password: password }),
+            });
+            var data = await res.json().catch(function () {
+              return {};
+            });
+
+            if (!res.ok || !data.success || !data.token) {
+              throw new Error(
+                data.message || "Sign in failed. Check your credentials.",
+              );
+            }
+
+            sessionStorage.setItem(STORAGE_TOKEN, data.token);
+            sessionStorage.setItem(STORAGE_USER, JSON.stringify(data.user));
+            window.location.href = destination;
+          } catch (err) {
+            errorEl.textContent =
+              err && err.message ? err.message : "Something went wrong.";
+            errorEl.classList.add("visible");
+          } finally {
+            submit.disabled = false;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

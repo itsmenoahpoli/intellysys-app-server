@@ -7,7 +7,9 @@ type JwtContext = {
   sign: (payload: {
     sub: string;
     email: string;
+    name: string;
     userRoleId: number;
+    userRoleName: string;
     exp?: string | number;
   }) => Promise<string>;
 };
@@ -38,14 +40,16 @@ export class AuthController extends BaseController {
     const token = await jwt.sign({
       sub: String(user.id),
       email: user.email,
+      name: user.name,
       userRoleId: user.userRoleId,
+      userRoleName: user.userRole.name,
       exp: "7d",
     });
 
     set.status = HttpStatus.OK;
     return {
       success: true,
-      user,
+      user: this.authService.toLoginResponse(user),
       token,
     };
   };

@@ -5,6 +5,14 @@ export type AuthUser = Omit<User, "passwordHash"> & {
   userRole: UserRole;
 };
 
+export type LoginUserResponse = {
+  email: string;
+  name: string;
+  userRole: {
+    name: string;
+  };
+};
+
 export class AuthService {
   constructor(private readonly users: UsersService) {}
 
@@ -19,6 +27,16 @@ export class AuthService {
       updatedAt: user.updatedAt,
       userRoleId: user.userRoleId,
       userRole: user.userRole,
+    };
+  }
+
+  toLoginResponse(user: AuthUser): LoginUserResponse {
+    return {
+      email: user.email,
+      name: user.name,
+      userRole: {
+        name: user.userRole.name,
+      },
     };
   }
 

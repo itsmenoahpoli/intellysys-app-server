@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Devices · Dashboard</title>
+    <link rel="stylesheet" href="/public/dashboard/components/sidebar.css" />
+    <style>
+      .panel {
+        background: #1a2332;
+        border: 1px solid #2d3a4f;
+        border-radius: 12px;
+        padding: 28px 32px;
+      }
+      .panel h2 {
+        margin: 0 0 12px;
+      }
+      .panel p {
+        margin: 0;
+        color: #8b9cb3;
+        line-height: 1.55;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dash-shell">
+      <div class="dash-shell__sidebar" id="dashboard-sidebar"></div>
+      <div class="dash-shell__content">
+        <header class="dash-topbar">
+          <h1>Devices</h1>
+          <div class="dash-topbar__actions">
+            <button type="button" class="link" id="signout">Sign out</button>
+          </div>
+        </header>
+        <main class="dash-main">
+          <div class="panel">
+            <h2>Devices</h2>
+            <p>
+              This route matches the sidebar item highlighted in the reference
+              layout. Connect your device management UI here.
+            </p>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script src="/public/dashboard/components/sidebar.js"></script>
+    <script>
+      (function () {
+        var STORAGE_TOKEN = "intellysys_auth_token";
+        var STORAGE_USER = "intellysys_auth_user";
+        var token = sessionStorage.getItem(STORAGE_TOKEN);
+        if (!token) {
+          window.location.replace(
+            "/public/dashboard/login.html?next=" +
+              encodeURIComponent(
+                window.location.pathname + window.location.search,
+              ),
+          );
+          return;
+        }
+        DashboardSidebar.mount({ active: "devices" });
+        document.getElementById("signout").addEventListener("click", function () {
+          sessionStorage.removeItem(STORAGE_TOKEN);
+          sessionStorage.removeItem(STORAGE_USER);
+          window.location.href = "/public/dashboard/login.html";
+        });
+      })();
+    </script>
+  </body>
+</html>
